@@ -1,6 +1,7 @@
 backend/node_modules
 backend/.env
 
+frontend/.vite
 frontend/README.md
 frontend/# Logs
 frontend/logs
