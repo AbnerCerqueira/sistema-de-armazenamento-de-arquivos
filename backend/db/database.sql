@@ -4,6 +4,8 @@ use projetotsreact;
 
 create table pessoas(
     id int  primary key AUTO_INCREMENT,
-    nome varchar(50),
-    senha varchar(50)
+    username varchar(50),
+    senha varchar(500)
 );
+
+select * from pessoas WHERE username = 'fodase';
