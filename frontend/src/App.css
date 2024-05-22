@@ -5,11 +5,46 @@
   text-align: center;
 }
 
+#fundo {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+}
+
+#titulo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 3px;
+}
+
+#titulo a {
+  color: white;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 8px;
+  transition: 0.25s;
+}
+
+#titulo a.active {
+  color: #646cff;
+  font-size: 120%;
+  transform: scale(1.08);
+}
+
 form {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
 }
 
-form > * {
-  margin-top: 10px;
+form>* {
+  margin: 10px 0px;
+
+}
+
+input {
+  width: 70%;
 }
