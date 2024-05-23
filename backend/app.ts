@@ -31,24 +31,17 @@ app.post('/api/login', async (req: Request, res: Response) => {
         return res.json({ message: "Usuário não encontrado" })
     }
 
-    let confirmaSenha: boolean | null = null
-    let user = {}
     for (let i = 0; i < result.length; i++) { // loop caso tenha usuario com o msm username
 
-        confirmaSenha = await bcrypt.compare(dadosFornecidos.senha, result[i].senha)
+        const confirmaSenha = await bcrypt.compare(dadosFornecidos.senha, result[i].senha)
 
-        user = {
-            id: result[i].id,
-            username: result[i].username
+        if (confirmaSenha) {
+            // caso tudo de certo, retorna id e ususername
+            return res.json({ username: result[i].username, senha: result[i].senha })
         }
     }
-
-    if (!confirmaSenha) { // validar senha
-        return res.json({ message: "Senha inválida" })
-    }
-
-    // caso tudo de certo, retorna id e ususername
-    return res.json( user )
+    // se n tiver confirmado senha ent manda isso:
+    return res.json({ message: "Senha inválida" })
 })
 
 const port = process.env.PORT || 8080

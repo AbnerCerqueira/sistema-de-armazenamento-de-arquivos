@@ -1,3 +1,4 @@
+-- Active: 1715288619464@@127.0.0.1@3306@projetotsreact
 create database projetotsreact;
 
 use projetotsreact;
@@ -8,4 +9,3 @@ create table pessoas(
     senha varchar(500)
 );
 
-select * from pessoas WHERE username = 'fodase';
