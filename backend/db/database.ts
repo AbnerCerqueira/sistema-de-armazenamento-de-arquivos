@@ -11,4 +11,18 @@ const con = mysql2.createConnection({
 }).promise()
 
 
+
+async function conectar(): Promise<void>{
+    try {
+        await con.connect()
+        console.log("Conectado ao banco de dados")
+        return
+    } catch (err) {
+        console.log("Erro ao conectar com banco dados\n", err)
+        return
+    }
+}
+
+conectar()
+
 export default con

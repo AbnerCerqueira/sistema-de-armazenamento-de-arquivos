@@ -1,4 +1,3 @@
--- Active: 1715288619464@@127.0.0.1@3306@projetotsreact
 create database projetotsreact;
 
 use projetotsreact;
@@ -9,3 +8,8 @@ create table pessoas(
     senha varchar(500)
 );
 
+create table arquivos(
+    id int PRIMARY KEY AUTO_INCREMENT,
+    nome_arquivo varchar(200),
+    diretorio varchar(200)
+);

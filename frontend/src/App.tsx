@@ -7,7 +7,7 @@ import Form from './layouts/Form'
 // pages
 import Login, { logar } from './pages/Login'
 import Cadastro, { cadastrar } from './pages/Cadastro'
-import Home from './pages/Home'
+import Home, { filesLoader, upload } from './pages/Home'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,7 +20,7 @@ const router = createBrowserRouter(
       {/* /rota da index */}
 
       {/* rota user */}
-      <Route path='/user' element={<Home />} />
+      <Route path='/user/:username' element={<Home />} action={upload} loader={filesLoader}/>
       {/* /rota user */}
     </Route>
   )
@@ -30,9 +30,7 @@ function App() {
 
   return (
     <>
-    <div id='fundo'>
       <RouterProvider router={router} />
-      </div>
     </>
   )
 }

@@ -34,7 +34,7 @@ export async function logar({ request }: { request: Request }) {
         if (message) {
             return message
         }
-        return redirect('/user')
+        return redirect(`/user/${username}`)
     }
     catch (error) {
         throw new Error // erro interno no servidor
