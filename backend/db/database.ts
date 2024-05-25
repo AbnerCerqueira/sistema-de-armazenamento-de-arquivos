@@ -18,7 +18,7 @@ async function conectar(): Promise<void>{
         console.log("Conectado ao banco de dados")
         return
     } catch (err) {
-        console.log("Erro ao conectar com banco dados\n", err)
+        console.log("Erro ao conectar com banco dados\n" + err)
         return
     }
 }

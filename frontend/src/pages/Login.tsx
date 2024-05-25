@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export default function Cadastro() {
 
-    const messages = useActionData()
+    const messages = useActionData() as string
 
     return (
         <>
@@ -11,7 +11,7 @@ export default function Cadastro() {
                 <label htmlFor='user'>User</label>
                 <input type='text' id='user' name='userInput' autoFocus />
                 <label htmlFor='senha'>Senha</label>
-                <input type='text' id='senha' name='senhaInput' />
+                <input type='password' id='senha' name='senhaInput' />
                 {messages && <p>{messages}</p>}
                 <button type='submit'>Logar</button>
             </Form>
@@ -30,7 +30,7 @@ export async function logar({ request }: { request: Request }) {
     }
     try {
         const result = await axios.post('/api/login', submission)
-        const { message, id, username } = result.data
+        const { message, username } = result.data
         if (message) {
             return message
         }

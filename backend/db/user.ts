@@ -9,7 +9,7 @@ export async function addUser(dados: string) {
 }
 
 export async function getUser(user: string): Promise<RowDataPacket[]> {
-    let sql = 'SELECT id, username, senha FROM pessoas WHERE username = ?'
+    let sql = 'SELECT id_pessoa, username, senha FROM pessoas WHERE username = ?'
     const [rows] = await con.query<RowDataPacket[]>(sql, user)
     
     return rows

@@ -1,4 +1,4 @@
-import { createBrowserRouter, createRoutesFromElements, Route, Routes, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 import './App.css'
 
 // layout
@@ -7,7 +7,7 @@ import Form from './layouts/Form'
 // pages
 import Login, { logar } from './pages/Login'
 import Cadastro, { cadastrar } from './pages/Cadastro'
-import Home, { filesLoader, upload } from './pages/Home'
+import Home, { upload } from './pages/Home'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,7 +20,7 @@ const router = createBrowserRouter(
       {/* /rota da index */}
 
       {/* rota user */}
-      <Route path='/user/:username' element={<Home />} action={upload} loader={filesLoader}/>
+      <Route path='/user/:username' element={<Home />} action={upload}/>
       {/* /rota user */}
     </Route>
   )

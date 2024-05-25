@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export default function Cadastro() {
 
-    const messages = useActionData()
+    const messages = useActionData() as string
 
     return (
         <>
@@ -11,9 +11,9 @@ export default function Cadastro() {
                 <label htmlFor='user'>User</label>
                 <input type='text' id='user' name='userInput' />
                 <label htmlFor='senha'>Senha</label>
-                <input type='text' id='senha' name='senhaInput' />
+                <input type='password' id='senha' name='senhaInput' />
                 <label htmlFor='confSenha'>Confirmar senha</label>
-                <input type='text' id='confSenha' name='confSenhaInput' />
+                <input type='password' id='confSenha' name='confSenhaInput' />
                 {messages && <p>{messages}</p>}
                 <button type='submit'> Cadastrar</button>
             </Form>

@@ -37,14 +37,40 @@ form {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 300px;
 }
 
 form>* {
   margin: 10px 0px;
+}
 
+#arquivos {
+  width: 1000px;
+}
+
+li {
+  list-style: none;
 }
 
 input {
-  width: 70%;
+  width: 200px;
+}
+
+#download {
+  margin: 10px;
+  background-color: green;
+}
+
+#apagar {
+  background-color: red;
+}
+
+#download,
+#apagar {
+  padding: 0em 0.6em;
+}
+
+#download:hover,
+#apagar:hover {
+  border-color: white;
+  padding: 0em 0.6em;
 }
