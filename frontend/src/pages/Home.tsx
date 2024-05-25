@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Form, useActionData } from "react-router-dom"
+import { Form, redirect, useActionData } from "react-router-dom"
 import axios from "axios"
 
 
@@ -12,15 +12,20 @@ type Files = {
 export default function Home() {
 
     const messages = useActionData() as string
+    const [userId, setUserId] = useState<number | null>(null)
     const [username, setUsername] = useState<string | null>(null)
     const [files, setFiles] = useState<Files[]>([])
 
     async function autentica() {
-        const result = await axios.get('/api/login') // veriicar se tem uma sessao criada
-        const storedFiles = await axios.post('/api/files', { id_pessoa: result.data.id_pessoa })
-
-        setUsername(result.data.username)
-        setFiles(storedFiles.data.reverse())
+        try {
+            const result = await axios.get('/api/login') // veriicar se tem uma sessao criada
+            const storedFiles = await axios.post('/api/files', { id_pessoa: result.data.id_pessoa })
+            setUserId(result.data.id_pessoa)
+            setUsername(result.data.username)
+            setFiles(storedFiles.data.reverse())
+        } catch (err) {
+            return
+        }
     }
 
     async function handleDownload(nome_arquivo: string) {
@@ -50,8 +55,11 @@ export default function Home() {
 
     return (
         <>
-            {username ? (
+            {userId ? (
                 <>
+                    <Form method="post" action={'/user/logout'}>
+                        <button type="submit">↪Sair</button>
+                    </Form>
                     <h2>Bem vindo {username}</h2>
 
                     <Form method='post' action={`/user/${username}`} encType="multipart/form-data">
@@ -78,7 +86,8 @@ export default function Home() {
                     </ul>
                 </>
             ) : (
-                <p>Faça login para acessar a pagina</p>
+                // <p>Faça login para acessar a pagina</p>
+                <></>
             )}
 
         </>
@@ -89,7 +98,7 @@ export async function upload({ request }: { request: Request }) {
 
     const dados = await request.formData() // pegar dados do arquivo enviado
 
-    const file = dados.get('file')
+    const file = dados.get('file') as string
     const submission = new FormData()
     submission.append('file', file) // preparar submissao
 
@@ -103,5 +112,15 @@ export async function upload({ request }: { request: Request }) {
     }
     catch (error) {
         throw new Error // erro interno no servidor
+    }
+}
+
+export async function logOut() {
+
+    try {
+        await axios.get('/api/logout')
+        return redirect('/')
+    } catch (err) {
+        throw new Error
     }
 }

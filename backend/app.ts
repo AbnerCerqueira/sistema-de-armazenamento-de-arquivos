@@ -65,6 +65,11 @@ app.get('/api/login', (req: Request, res: Response) => {
     res.json({ id_pessoa: req.session.userId, username: req.session.username })
 })
 
+app.get('/api/logout', (req: Request, res: Response) => {
+    req.session.destroy(() => {})
+    res.end()
+})
+
 const upload = multer({ storage })
 
 app.post('/api/upload', upload.single('file'), async (req: Request, res: Response) => {
@@ -78,9 +83,13 @@ app.post('/api/upload', upload.single('file'), async (req: Request, res: Respons
 })
 
 app.post('/api/files', async (req: Request, res: Response) => {
-    const result = await getFiles(req.body.id_pessoa)
+    try {
+        const result = await getFiles(req.body.id_pessoa)
+        res.json(result)
+    } catch (err) {
+        res.end()
+    }
 
-    res.json(result)
 })
 
 app.get('/api/download/:filename', (req: Request, res: Response) => {
