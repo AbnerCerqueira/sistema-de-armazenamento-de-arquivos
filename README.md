@@ -1,4 +1,5 @@
 # Tutorial
+- Abra o terminal e use os comandos:
 - `git clone https://github.com/AbnerCerqueira/sistema-de-armazenamento-de-arquivos.git`
 - `cd sistema-de-armazenamento-de-arquivos/`
 ## Setup Backend
@@ -37,6 +38,7 @@ create table arquivos(
 
 
 ## Setup Frontend
+- Abra um novo terminal e acesse o diretório frontend
 - `cd ..`
 - ![image](https://github.com/AbnerCerqueira/sistema-de-armazenamento-de-arquivos/assets/102826252/c50fa702-4637-4669-87d4-9d3896b5be8d)
 
