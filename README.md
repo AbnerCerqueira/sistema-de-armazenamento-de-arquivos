@@ -28,13 +28,13 @@ create table arquivos(
 );
 ```
 
-- No arquivo database.ts no diretódio backend, tem as configurações para se conectar com o banco![image](https://github.com/AbnerCerqueira/sistema-de-armazenamento-de-arquivos/assets/102826252/b35b67ea-b552-4918-a85d-de6022b57323)
-- Se seu usário ou senha for diferente, altere diretamente no arquivo database.ts ou crie um arquivo .env no diretório backend e atribua ás variáveis suas configurações, exemplo:
+- No diretório backend tem um arquivo chamado database.ts nele ficam as configurações para se conectar com o banco![image](https://github.com/AbnerCerqueira/sistema-de-armazenamento-de-arquivos/assets/102826252/b35b67ea-b552-4918-a85d-de6022b57323)
+- Se seu usuário ou senha for diferente, altere diretamente no database.ts ou crie um arquivo .env no diretório backend e atribua às variáveis suas configurações, exemplo:
 - ![image](https://github.com/AbnerCerqueira/sistema-de-armazenamento-de-arquivos/assets/102826252/331ef5a5-4878-40c4-8a9c-df0b6ff4882b)
 - Inicie o servidor com `npm run dev`
 - ![image](https://github.com/AbnerCerqueira/sistema-de-armazenamento-de-arquivos/assets/102826252/41fe6788-36f9-4b4b-8b90-c2da21b36c04)
 
-- Se alguma coisa diferente disse tiver aparecido, algum passo não foi seguido corretamente
+- Se alguma coisa diferente disso tiver aparecido, algum passo não foi seguido corretamente
 
 
 ## Setup Frontend
