@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import Login from "./pages/Login"
 import Forms from "./layouts/Forms"
 import Cadastro from "./pages/Cadastro"
+import Home from "./pages/Home"
 
 function App() {
 
@@ -19,6 +20,10 @@ function App() {
           element: <Cadastro />
         }
       ]
+    },
+    {
+      path: "/user/nome",
+      element: <Home />
     }
   ])
 
