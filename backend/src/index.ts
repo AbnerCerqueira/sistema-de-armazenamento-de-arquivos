@@ -1,10 +1,13 @@
 import fastify from 'fastify'
+import mysqlPlugin from "./plugins/mysql"
+import jwtPlugin from "./plugins/jwt"
+import routes from './routes/routes'
 
 const server = fastify({ logger: true })
 
-server.get('/', (req, reply) => {
-    return reply.send('teste')
-})
+server.register(mysqlPlugin)
+server.register(jwtPlugin)
+server.register(routes)
 
 async function start() {
     try {
