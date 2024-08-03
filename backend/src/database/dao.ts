@@ -23,7 +23,7 @@ export async function mysqlCreateDirFile(con: MySQLPromiseConnection, file: File
     await con.query(sql, file)
 }
 
-export async function mysqlGetFilesById(con: MySQLPromiseConnection, id_user: number) {
+export async function mysqlGetFilesByUser(con: MySQLPromiseConnection, id_user: number) {
     const sql = "SELECT * FROM file WHERE id_user = ?"
     const [rows] = await con.query<MySQLRowDataPacket[]>(sql, id_user)
     return rows

@@ -4,7 +4,7 @@ import util from "util"
 import { FastifyReply, FastifyRequest } from "fastify";
 import { pipeline } from "stream"
 import { File, User } from "../types";
-import { mysqlCreateDirFile, mysqlCreateUser, mysqlDeleteFile, mysqlGetFileById, mysqlGetFilesById, mysqlGetUser } from "../database/dao"
+import { mysqlCreateDirFile, mysqlCreateUser, mysqlDeleteFile, mysqlGetFileById, mysqlGetFilesByUser, mysqlGetUser } from "../database/dao"
 import { MySQLRowDataPacket } from "@fastify/mysql";
 import path from "path";
 
@@ -93,11 +93,11 @@ export async function uploadFile(req: FastifyRequest, reply: FastifyReply) {
 
 export async function getFiles(req: FastifyRequest, reply: FastifyReply) {
     try {
-        const filePath = path.join(__dirname, '../', 'uploads', 'unnamed.jpg');
-        console.log(`Serving file from: ${filePath}`);
-        return reply.status(200).sendFile('unnamed.jpg', path.join(__dirname, '../', 'uploads'));
+        const con = req.server.mysql
+        const { id_user } = req.user as User
+        const results = await mysqlGetFilesByUser(con, id_user)
+        return reply.status(200).send(results)
     } catch (err) {
-        console.log(err)
         return reply.status(500).send(err)
     }
 }
@@ -108,7 +108,7 @@ export async function downloadFile(req: FastifyRequest, reply: FastifyReply) {
         const { id_file } = req.params as File
         const [result] = await mysqlGetFileById(con, id_file)
         const filename = result.filename as string
-        return reply.status(200).sendFile(filename, path.join(__dirname, '../', 'uploads'))
+        return reply.status(200).download(filename, filename)
     } catch (err) {
         return reply.status(500).send(err)
     }
@@ -122,10 +122,10 @@ export async function deleteFile(req: FastifyRequest, reply: FastifyReply) {
     }
     try {
         const con = req.server.mysql
-        const [result] = await mysqlGetFileById(con, id_file)
+        const result = await mysqlGetFileById(con, id_file)
         if (result.length) {
             await mysqlDeleteFile(con, id_file)
-            await removeFile(path.join(__dirname, '../', 'uploads', result.filename))
+            await removeFile(path.join(__dirname, '../', 'uploads', result[0].filename))
             return reply.status(200).send({ message: "Arquivo apagado com sucesso" })
         }
     } catch (err) {
