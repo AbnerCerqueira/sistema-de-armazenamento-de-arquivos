@@ -1,5 +1,5 @@
 import { FastifyInstance, RouteOptions } from "fastify";
-import { createUser, getFiles, getUser, uploadFile, downloadFile, deleteFile } from "../controllers/userController";
+import { createUser, getFiles, getUser, uploadFile, downloadFile, deleteFile, getToken } from "../controllers/userController";
 import { verifyJwt } from "../middlewares/auth";
 
 const cadastroRoute: RouteOptions = {
@@ -18,7 +18,7 @@ const protectedRoute: RouteOptions = {
     method: "GET",
     url: "/api/protected",
     onRequest: verifyJwt,
-    handler: verifyJwt
+    handler: getToken
 }
 
 const uploadFileRoute: RouteOptions = {

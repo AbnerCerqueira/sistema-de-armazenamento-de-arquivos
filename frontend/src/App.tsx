@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import Login from "./pages/Login"
+import Login, { login } from "./pages/Login"
 import Forms from "./layouts/Forms"
-import Cadastro from "./pages/Cadastro"
+import Cadastro, { cadastro } from "./pages/Cadastro"
 import Home from "./pages/Home"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 function App() {
 
@@ -12,18 +13,25 @@ function App() {
       element: <Forms />,
       children: [
         {
-          path: "",
-          element: <Login />
+          path: "login",
+          element: <Login />,
+          action: login
         },
         {
-          path: "/cadastro",
-          element: <Cadastro />
+          path: "cadastro",
+          element: <Cadastro />,
+          action: cadastro
         }
       ]
     },
     {
-      path: "/user/nome",
-      element: <Home />
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: "/user/:username",
+          element: <Home />
+        }
+      ]
     }
   ])
 
