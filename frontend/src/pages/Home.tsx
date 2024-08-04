@@ -10,7 +10,7 @@ export default function Home() {
     const fetchFiles = useLoaderData() as FilesUser[]
 
     const [isUploaded, setIsUploaded] = useState(false)
-    const [loading, setLoading] = useState<number | null>(null)
+    const [loading, setLoading] = useState<string | null>(null)
 
     const [originalFetch] = useState<FilesUser[] | null>(fetchFiles)
     const [files, setFiles] = useState<FilesUser[] | null>(originalFetch)
@@ -113,14 +113,15 @@ export default function Home() {
 
                     <form onSubmit={handleUpload}>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }} className="space-y-6 text-center">
-                            <span className="relative block w-96 h-40 p-4 text-center border-2 border-dotted border-custom-green rounded-md duration-200 hover:border-solid">
-                                {previewURL && <img src={previewURL} className="absolute z-10 left-1/3 w-1/3"></img>}
+                            <span className="relative block w-96 h-60 p-4 text-center border-2 border-dotted border-custom-green rounded-md duration-200 hover:border-solid">
+                                {fileName}
+                                {previewURL && <img src={previewURL} className="absolute z-10 left-1/3 bottom-1/3 w-1/3"></img>}
                                 <span className={previewURL ? "hidden" : ""}>Arraste aqui seu arquivo</span>
-                                <input name="input-file" type="file" onChange={handleFileSelected} className={`absolute z-10 top-0 left-0 w-full h-full cursor-pointer file:${previewURL ? "hidden" : ""} file:absolute file:bottom-1 file:right-8 file:w-4/5 file:h-1/4 file:bg-custom-purple file:text-white file:border-0 file:rounded file:cursor-pointer`} />
+                                <input name="input-file" type="file" onChange={handleFileSelected} className={`absolute z-10 top-0 left-0 w-full h-full text-center text-custom-black cursor-pointer file:${previewURL ? "hidden" : ""} file:absolute file:bottom-1 file:right-8 file:w-4/5 file:h-1/4 file:bg-custom-purple file:text-white file:border-0 file:rounded file:cursor-pointer`} />
                             </span>
                             <button type="submit" className="w-full h-10 bg-custom-purple border border-custom-purple rounded duration-200 hover:border-custom-green">Adicionar</button>
-                            <output> {loading && `Progresso: ${loading}%`}</output>
-                            <output>{isUploaded && <a onClick={() => { window.location.reload() }} className="text-blue-500 underline cursor-pointer">{" "}atualizar pagina</a>}</output>
+                            <output> {loading && loading}</output>
+                            <output>{isUploaded && <a onClick={() => { window.location.reload() }} className="text-blue-500 underline cursor-pointer">{" "}Atualizar pagina</a>}</output>
                         </Typography>
                     </form>
                 </div>
@@ -129,29 +130,13 @@ export default function Home() {
     )
     async function handleUpload(e: SyntheticEvent<HTMLFormElement>) {
         e.preventDefault()
-        const file = fileInput
-        if (!file) {
-            return
-        }
-        const chunkSize = 1024 * 1024 * 5
-        const totalChunks = Math.ceil(file.size / chunkSize)
-        let uploadedChunks = 0
-
-        for (let i = 0; i < totalChunks; i++) {
-            const start = i * chunkSize
-            const end = (i + 1) * chunkSize
-
-            const blobSlice = file.slice(start, end)
-
-            const formData = new FormData()
-            formData.append("input-file", blobSlice, file.name)
-
+        const formData = new FormData()
+        if (fileInput) {
+            formData.append("input-file", fileInput)
             try {
+                setLoading("Carregando...")
                 await api.post("/api/upload", formData, { headers: { "Content-Type": "multipart/form-data" } })
-                uploadedChunks++
-                setLoading(Math.round((uploadedChunks / totalChunks) * 100))
-            }
-            catch (err: any) {
+            } catch (err: any) {
                 console.log(err.response.data.message)
                 throw new Error
             }

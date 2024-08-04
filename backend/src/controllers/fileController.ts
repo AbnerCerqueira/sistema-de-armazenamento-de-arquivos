@@ -18,7 +18,7 @@ export async function uploadFile(req: FastifyRequest, reply: FastifyReply) {
             const { id_user } = req.user as User
             await pump(file.file, fs.createWriteStream(dir_file))
             await mysqlCreateDirFile(con, { filename, dir_file, id_user })
-            return reply.status(200).send()
+            return reply.status(200).send({ message: "Upado com sucesso" })
         }
         catch (err: any) {
             return err.code === "EISDIR" ? reply.status(204) : reply.status(500).send(err)
