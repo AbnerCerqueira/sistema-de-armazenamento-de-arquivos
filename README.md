@@ -6,7 +6,7 @@ cd sistema-de-armazenamento-de-arquivos/
 
 # Environment
 
-## Mysql
+## MySQL
 ```
 CREATE DATABASE sistemaarmazenamento;
 
@@ -28,9 +28,10 @@ CREATE TABLE file(
 ```
 ## ENVs
 ```
-MYSQL_HOST = "root"
-MYSQL_PASSWORD = ""
+MYSQL_USER = "root"
 MYSQL_DATABASE = "sistemaarmazenamento"
+MYSQL_PASSWORD = ""
+MYSQL_PORT = "3306"
 SECRET_JWT = "segredinho"
 ```
 
@@ -52,7 +53,7 @@ npm run dev
 
 ```
 http://localhost:5173/login
-
 ```
+
 ![image-3](https://github.com/user-attachments/assets/9055ede2-2203-40c8-a528-df9e9ab1d49f)
 ![image-6](https://github.com/user-attachments/assets/6e6678b4-7234-4dfa-a664-f8fc00733326)
