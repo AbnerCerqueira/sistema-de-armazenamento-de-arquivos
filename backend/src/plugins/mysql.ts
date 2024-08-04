@@ -15,7 +15,7 @@ async function mysqlPlugin(server: FastifyInstance) {
     try {
         await server.register(fastifyMysql, {
             promise: true,
-            uri: `mysql://${process.env.MYSQL_HOST}@localhost/${process.env.MYSQL_DATABASE}`,
+            uri: `mysql://${process.env.MYSQL_USER}@localhost:${process.env.MYSQL_PORT}/${process.env.MYSQL_DATABASE}`,
             password: process.env.MYSQL_PASSWORD
         })
         console.log("Conectado ao banco de dados")
