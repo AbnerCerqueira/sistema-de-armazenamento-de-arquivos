@@ -40,7 +40,7 @@ cd backend/
 npm i
 npm run dev
 ```
-![alt text](image-1.png)
+![image-1](https://github.com/user-attachments/assets/3900b51e-66b1-43b8-8b14-c1df9b6dd7ef)
 
 # Setup frontend
 ```
@@ -48,10 +48,11 @@ cd frontend/
 npm i
 npm run dev
 ```
-![alt text](image-2.png)
+![image-2](https://github.com/user-attachments/assets/5d24c05b-2091-4fa3-a0cb-b9be17e301ee)
 
 ```
 http://localhost:5173/login
+
 ```
-![alt text](image-3.png)
-![alt text](image-6.png)
+![image-3](https://github.com/user-attachments/assets/9055ede2-2203-40c8-a528-df9e9ab1d49f)
+![image-6](https://github.com/user-attachments/assets/6e6678b4-7234-4dfa-a664-f8fc00733326)
