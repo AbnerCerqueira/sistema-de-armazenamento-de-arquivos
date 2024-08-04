@@ -30,7 +30,6 @@ function App() {
         {
           path: "/user/:username",
           element: <Home />,
-          action: upload,
           loader: fetchFiles
         }
       ]

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt"
-import {  MySQLPromiseConnection, MySQLRowDataPacket } from "@fastify/mysql"
+import { MySQLPromiseConnection, MySQLRowDataPacket } from "@fastify/mysql"
 import { User, File } from "../types"
 
 export async function mysqlCreateUser(con: MySQLPromiseConnection, user: User) {
@@ -8,7 +8,7 @@ export async function mysqlCreateUser(con: MySQLPromiseConnection, user: User) {
     const sql = "INSERT INTO user SET ?"
     const hashedPassword = await bcrypt.hash(password_user, 10)
     await con.query(sql, { username_user, password_user: hashedPassword })
-} 
+}
 
 export async function mysqlGetUser(con: MySQLPromiseConnection, user: User) {
     const { username_user, password_user } = user
@@ -19,8 +19,14 @@ export async function mysqlGetUser(con: MySQLPromiseConnection, user: User) {
 }
 
 export async function mysqlCreateDirFile(con: MySQLPromiseConnection, file: File) {
-    const sql = "INSERT INTO file SET ?"
-    await con.query(sql, file)
+    const { filename, dir_file, id_user} = file
+    // const sql = "INSERT INTO file SET ?"
+    const sql = `INSERT INTO file (filename, dir_file, id_user)
+                SELECT ?, ?, ?
+                WHERE NOT EXISTS (
+                SELECT 1 FROM file WHERE filename = ? AND id_user = ?
+                );`
+    await con.query(sql, [filename, dir_file, id_user, filename, id_user])
 }
 
 export async function mysqlGetFilesByUser(con: MySQLPromiseConnection, id_user: number) {

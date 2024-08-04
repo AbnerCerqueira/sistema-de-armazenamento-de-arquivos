@@ -2,25 +2,29 @@ import api from "../api/Api"
 import Cookies from "js-cookie"
 import { Modal, Typography } from "@mui/material"
 import { ArrowDown, ArrowUp, Download, LogOut, Search, X } from "lucide-react"
-import { ChangeEvent, useEffect, useMemo, useState } from "react"
-import { Form, useActionData, useLoaderData } from "react-router-dom"
+import { ChangeEvent, SyntheticEvent, useEffect, useMemo, useState } from "react"
+import { useLoaderData } from "react-router-dom"
 import { FilesUser } from "../types"
 
 export default function Home() {
     const fetchFiles = useLoaderData() as FilesUser[]
-    const message = useActionData() as string
+
+    const [isUploaded, setIsUploaded] = useState(false)
+    const [loading, setLoading] = useState<number | null>(null)
 
     const [originalFetch] = useState<FilesUser[] | null>(fetchFiles)
     const [files, setFiles] = useState<FilesUser[] | null>(originalFetch)
     const [username, setUsername] = useState<string | undefined>()
     const [fileInput, setFileInput] = useState<File | null>(null)
+    const [fileName, setFileName] = useState<string | null>(null)
     const [open, setOpen] = useState(false)
 
     const handleOpen = () => setOpen(true)
     const handleClose = () => { setOpen(false), setFileInput(null) }
-    
+
     const handleFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
         e.currentTarget.files?.length ? setFileInput(e.currentTarget.files[0]) : setFileInput(null)
+        setFileName(e.currentTarget.files![0].name)
     }
 
     const previewURL = useMemo(() => {
@@ -77,7 +81,7 @@ export default function Home() {
                     <table className="border rounded table-fixed">
                         <thead className="uppercase">
                             <tr className="text-left">
-                                <th className="p-3 border border-custom-green"><span className="inline-flex space-x-2"><span>arquivo</span> <ArrowUp onClick={handleSortAsc} cursor="pointer"/><ArrowDown onClick={handleSortDesc} cursor="pointer"/></span></th>
+                                <th className="p-3 border border-custom-green"><span className="inline-flex space-x-2"><span>arquivo</span> <ArrowUp onClick={handleSortAsc} cursor="pointer" /><ArrowDown onClick={handleSortDesc} cursor="pointer" /></span></th>
                                 <th className="p-3 border border-custom-green">baixar</th>
                                 <th className="p-3 border border-custom-green">apagar</th>
                             </tr>
@@ -107,31 +111,53 @@ export default function Home() {
                         <button type="button" onClick={handleClose} className="absolute top-0 right-0 bg-red-500"><X /></button>
                     </Typography>
 
-                    <Form method="post" action={`/user/${username}`} encType="multipart/form-data">
+                    <form onSubmit={handleUpload}>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }} className="space-y-6 text-center">
                             <span className="relative block w-96 h-40 p-4 text-center border-2 border-dotted border-custom-green rounded-md duration-200 hover:border-solid">
                                 {previewURL && <img src={previewURL} className="absolute z-10 left-1/3 w-1/3"></img>}
                                 <span className={previewURL ? "hidden" : ""}>Arraste aqui seu arquivo</span>
-                                <input name="input-file" type="file" onChange={handleFileSelected} className={`absolute z-10 top-0 left-0 w-full h-full text-center cursor-pointer file:${previewURL ? "hidden" : ""} file:absolute file:bottom-1 file:right-8 file:w-4/5 file:h-1/4 file:bg-custom-purple file:text-white file:border-0 file:rounded file:cursor-pointer`} />
+                                <input name="input-file" type="file" onChange={handleFileSelected} className={`absolute z-10 top-0 left-0 w-full h-full cursor-pointer file:${previewURL ? "hidden" : ""} file:absolute file:bottom-1 file:right-8 file:w-4/5 file:h-1/4 file:bg-custom-purple file:text-white file:border-0 file:rounded file:cursor-pointer`} />
                             </span>
                             <button type="submit" className="w-full h-10 bg-custom-purple border border-custom-purple rounded duration-200 hover:border-custom-green">Adicionar</button>
-                            {message && <span>{message}<a onClick={() => { window.location.reload() }} className="text-blue-500 underline cursor-pointer">{" "}atualizar pagina</a></span>}
+                            <output> {loading && `Progresso: ${loading}%`}</output>
+                            <output>{isUploaded && <a onClick={() => { window.location.reload() }} className="text-blue-500 underline cursor-pointer">{" "}atualizar pagina</a>}</output>
                         </Typography>
-                    </Form>
+                    </form>
                 </div>
             </Modal>
         </main >
     )
-}
+    async function handleUpload(e: SyntheticEvent<HTMLFormElement>) {
+        e.preventDefault()
+        const file = fileInput
+        if (!file) {
+            return
+        }
+        const chunkSize = 1024 * 1024 * 5
+        const totalChunks = Math.ceil(file.size / chunkSize)
+        let uploadedChunks = 0
 
-export async function upload({ request }: { request: Request }) {
-    const data = await request.formData()
-    try {
-        const result = await api.post("/api/upload", data, { headers: { "Content-Type": "multipart/form-data" } })
-        return result.status === 204 ? "" : result.data.message ?? ""
-    }
-    catch (err: any) {
-        return err.response.data.message
+        for (let i = 0; i < totalChunks; i++) {
+            const start = i * chunkSize
+            const end = (i + 1) * chunkSize
+
+            const blobSlice = file.slice(start, end)
+
+            const formData = new FormData()
+            formData.append("input-file", blobSlice, file.name)
+
+            try {
+                await api.post("/api/upload", formData, { headers: { "Content-Type": "multipart/form-data" } })
+                uploadedChunks++
+                setLoading(Math.round((uploadedChunks / totalChunks) * 100))
+            }
+            catch (err: any) {
+                console.log(err.response.data.message)
+                throw new Error
+            }
+        }
+        setLoading(null)
+        setIsUploaded(true)
     }
 }
 

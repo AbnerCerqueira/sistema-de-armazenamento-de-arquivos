@@ -8,23 +8,22 @@ import { User, File } from "../types"
 
 export async function uploadFile(req: FastifyRequest, reply: FastifyReply) {
     const pump = util.promisify(pipeline)
-    const files = req.files({ limits: { fileSize: 1024 * 1024 * 100 * 50 }, throwFileSizeLimit: true }) //5GB MAX
-
-    try {
-        const con = req.server.mysql
-        for await (const file of files) {
-            const filename = file.filename
-            const dir_file = `./src/uploads/${file.filename}`
+    const file = await req.file({ limits: { fileSize: 1024 * 1024 * 100 * 50 }, throwFileSizeLimit: true }) //5GB MAX
+    
+    if (file) {
+        try {
+            const con = req.server.mysql
+            const filename = file?.filename
+            const dir_file = `./src/uploads/${filename}`
             const { id_user } = req.user as User
             await pump(file.file, fs.createWriteStream(dir_file))
             await mysqlCreateDirFile(con, { filename, dir_file, id_user })
+            return reply.status(200).send()
         }
-        return reply.status(202).send({ message: "Upload realizado" })
+        catch (err: any) {
+            return err.code === "EISDIR" ? reply.status(204) : reply.status(500).send(err)
+        }
     }
-    catch (err: any) {
-        return err.code === "EISDIR" ? reply.status(204) : reply.status(500).send(err)
-    }
-
 }
 
 export async function getFiles(req: FastifyRequest, reply: FastifyReply) {
@@ -43,7 +42,7 @@ export async function downloadFile(req: FastifyRequest, reply: FastifyReply) {
         const con = req.server.mysql
         const { id_file } = req.params as File
         const [result] = await mysqlGetFileById(con, id_file)
-        const filename = result.filename as string
+        const { filename } = result as File
         return reply.status(200).download(filename, filename)
     } catch (err) {
         return reply.status(500).send(err)
