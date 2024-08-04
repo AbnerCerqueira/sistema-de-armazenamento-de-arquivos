@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import Login, { login } from "./pages/Login"
 import Forms from "./layouts/Forms"
 import Cadastro, { cadastro } from "./pages/Cadastro"
-import Home from "./pages/Home"
+import Home, { fetchFiles, upload } from "./pages/Home"
 import ProtectedRoute from "./components/ProtectedRoute"
 
 function App() {
@@ -29,7 +29,9 @@ function App() {
       children: [
         {
           path: "/user/:username",
-          element: <Home />
+          element: <Home />,
+          action: upload,
+          loader: fetchFiles
         }
       ]
     }

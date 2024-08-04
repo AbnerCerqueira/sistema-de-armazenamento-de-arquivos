@@ -24,7 +24,6 @@ export default function ProtectedRoute() {
     }, [])
 
     if (isLoading === false) {
-        console.log(isAuth)
         return isAuth ? <Outlet /> : <Navigate to="/login" replace />
     }
 }

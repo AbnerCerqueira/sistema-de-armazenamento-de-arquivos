@@ -39,7 +39,7 @@ export async function getUser(req: FastifyRequest, reply: FastifyReply) {
     const { username_user, password_user } = user
 
     if (!username_user || !password_user) {
-        return reply.status(400).send({ message: "Algum campo não foi definido" })
+        return reply.status(400).send({ message: "Preencha os campos vazios" })
     }
 
     if (username_user.trim() === "" || password_user.trim() === "") {
@@ -80,23 +80,23 @@ export async function getToken(req: FastifyRequest, reply: FastifyReply) {
 
 export async function uploadFile(req: FastifyRequest, reply: FastifyReply) {
     const pump = util.promisify(pipeline)
-    const files = req.files()
+    const files = await req.files()
 
-
-    for await (const file of files) {
+    if (files) {
         try {
             const con = req.server.mysql
-            const filename = file.filename
-            const dir_file = `./src/uploads/${file.filename}`
-            const { id_user } = req.user as User
-
-            await pump(file.file, fs.createWriteStream(dir_file))
-            await mysqlCreateDirFile(con, { filename, dir_file, id_user })
+            for await (const file of files) {
+                const filename = file.filename
+                const dir_file = `./src/uploads/${file.filename}`
+                const { id_user } = req.user as User
+                await pump(file.file, fs.createWriteStream(dir_file))
+                await mysqlCreateDirFile(con, { filename, dir_file, id_user })
+            }
+            return reply.status(202).send({ message: "Upload realizado" })
         } catch (err) {
             return reply.status(500).send(err)
         }
     }
-    return reply.status(202).send({ message: "Upload sendo realizado" })
 }
 
 export async function getFiles(req: FastifyRequest, reply: FastifyReply) {
