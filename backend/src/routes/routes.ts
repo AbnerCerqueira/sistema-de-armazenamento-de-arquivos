@@ -1,9 +1,10 @@
-import { FastifyInstance, RouteOptions } from "fastify";
-import { createUser, getFiles, getUser, uploadFile, downloadFile, deleteFile, getToken } from "../controllers/userController";
+import { FastifyInstance, RouteOptions } from "fastify"
+import { createUser, getUser, getToken } from "../controllers/userController"
+import { getFiles, uploadFile, downloadFile, deleteFile } from "../controllers/fileController"
 import { verifyJwt } from "../middlewares/auth";
 
 const cadastroRoute: RouteOptions = {
-    method: "POST",
+    method: "POST",         
     url: "/api/cadastro",
     handler: createUser
 }

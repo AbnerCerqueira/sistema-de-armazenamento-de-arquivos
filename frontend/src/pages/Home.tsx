@@ -128,7 +128,7 @@ export async function upload({ request }: { request: Request }) {
     const data = await request.formData()
     try {
         const result = await api.post("/api/upload", data, { headers: { "Content-Type": "multipart/form-data" } })
-        return result.data.message
+        return result.status === 204 ? "" : result.data.message ?? ""
     }
     catch (err: any) {
         return err.response.data.message
