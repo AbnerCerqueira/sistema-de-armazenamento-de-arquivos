@@ -1,9 +1,9 @@
+import api from "../api/Api"
 import Cookies from "js-cookie"
 import { Modal, Typography } from "@mui/material"
-import { Download, LogOut, Search, X } from "lucide-react"
+import { ArrowDown, ArrowUp, Download, LogOut, Search, X } from "lucide-react"
 import { ChangeEvent, useEffect, useMemo, useState } from "react"
 import { Form, useActionData, useLoaderData } from "react-router-dom"
-import api from "../api/Api"
 import { FilesUser } from "../types"
 
 export default function Home() {
@@ -13,14 +13,15 @@ export default function Home() {
     const [originalFetch] = useState<FilesUser[] | null>(fetchFiles)
     const [files, setFiles] = useState<FilesUser[] | null>(originalFetch)
     const [username, setUsername] = useState<string | undefined>()
-
     const [fileInput, setFileInput] = useState<File | null>(null)
+    const [open, setOpen] = useState(false)
+
+    const handleOpen = () => setOpen(true)
+    const handleClose = () => { setOpen(false), setFileInput(null) }
+    
     const handleFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
         e.currentTarget.files?.length ? setFileInput(e.currentTarget.files[0]) : setFileInput(null)
     }
-    const [open, setOpen] = useState(false)
-    const handleOpen = () => setOpen(true)
-    const handleClose = () => { setOpen(false), setFileInput(null) }
 
     const previewURL = useMemo(() => {
         return fileInput ? URL.createObjectURL(fileInput) : null
@@ -32,9 +33,19 @@ export default function Home() {
         if (input.length === 0) {
             return setFiles(originalFetch)
         }
-        
+
         const filteredData = originalFetch?.filter((file) => file.filename.toLowerCase().includes(input))
         filteredData && setFiles(filteredData)
+    }
+
+    function handleSortAsc() {
+        const sortedFiles = [...files ?? []].sort((a, b) => a.filename.localeCompare(b.filename))
+        setFiles(sortedFiles)
+    }
+
+    function handleSortDesc() {
+        const sortedFiles = [...files ?? []].sort((a, b) => b.filename.localeCompare(a.filename))
+        setFiles(sortedFiles)
     }
 
     useEffect(() => {
@@ -66,7 +77,7 @@ export default function Home() {
                     <table className="border rounded table-fixed">
                         <thead className="uppercase">
                             <tr className="text-left">
-                                <th className="p-3 border border-custom-green">arquivo</th>
+                                <th className="p-3 border border-custom-green"><span className="inline-flex space-x-2"><span>arquivo</span> <ArrowUp onClick={handleSortAsc} cursor="pointer"/><ArrowDown onClick={handleSortDesc} cursor="pointer"/></span></th>
                                 <th className="p-3 border border-custom-green">baixar</th>
                                 <th className="p-3 border border-custom-green">apagar</th>
                             </tr>
