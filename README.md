@@ -56,4 +56,5 @@ http://localhost:5173/login
 ```
 
 ![image-3](https://github.com/user-attachments/assets/9055ede2-2203-40c8-a528-df9e9ab1d49f)
-![image-6](https://github.com/user-attachments/assets/6e6678b4-7234-4dfa-a664-f8fc00733326)
+![image](https://github.com/user-attachments/assets/bc301ce6-a6f0-4614-a6d2-57781ffffc9f)
+
