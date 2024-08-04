@@ -11,3 +11,4 @@ export type FilesUser = {
     dir_file: string,
     id_user: number
 }
+    
