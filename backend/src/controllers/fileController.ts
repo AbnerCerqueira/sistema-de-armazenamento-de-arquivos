@@ -8,7 +8,7 @@ import { User, File } from "../types"
 
 export async function uploadFile(req: FastifyRequest, reply: FastifyReply) {
     const pump = util.promisify(pipeline)
-    const files = req.files()
+    const files = req.files({ limits: { fileSize: 1024 * 1024 * 100 * 50 }, throwFileSizeLimit: true }) //5GB MAX
 
     try {
         const con = req.server.mysql
